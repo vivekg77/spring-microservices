@@ -14,5 +14,15 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
+
+# kafka properties
+  kafka:
+    bootstrap-servers: localhost:9092
+    template:
+      default-topic: notificationTopic
+    producer:
+      value.serializer: org.apache.kafka.common.serialization.StringSerializer
+      key.serializer: org.apache.kafka.common.serialization.StringSerializer
+
 server:
   port: 8081
