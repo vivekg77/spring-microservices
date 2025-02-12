@@ -22,11 +22,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderService {
 
+
     private final OrderRepository orderRepository;
 
     private final WebClient.Builder webClientBuilder;
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+
+//    private  final KafkaTemplate<String, String> kafkaTemplate;
 
 //    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate) {
 //        this.orderRepository = orderRepository;
@@ -60,7 +63,9 @@ public class OrderService {
         //place the order only if the products are available
         if(allProductsInStock){
             orderRepository.save(order);
-            kafkaTemplate.send("notificationTopic", order.getOrderNumber());
+
+//            kafkaTemplate.send("notificationTopic", "Order Placed : " + order.getOrderNumber());
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
         } else {
             throw new IllegalArgumentException("Product is not in stock, please try again later");
         }
